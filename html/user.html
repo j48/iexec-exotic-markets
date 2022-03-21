@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+			<meta charset="utf-8">
+			<title>Decentralized Exotic Prediction Markets</title>
+			<link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
+			<link rel="stylesheet" type="text/css" href="./static/css/style.css"/>
+	</head>
+
+	<body>
+		<div class="body-logo"></div>
+		<header>
+				<div class="header-header display-none">
+					<div class="header-home noselect">
+						<div class="home-element"><img src="./static/img/misc/iexecDeal.png" class="home-logo"></div>
+						<div><h3 class="home-element">home</h3></div>
+					</div>
+				</div>
+			<div class="header-wrapper">
+				<h1 class="iexec-stroke">Exotic Prediction Markets</h1>
+				<h2 class="iexec-stroke">Oracle Factory Edition</h2>
+
+				<div class="header-body">
+					<div class="source-logo iexec-stroke">
+						<div>
+							<h3 class="header-h3">Powered By</h3>
+						</div>
+						<a class="iexec-link" href="https://iex.ec" target="_blank">
+						<img src="./static/img/misc/iexec-white.png" class="iexec-logo">
+						</a>
+					</div>
+				</div>
+			</div>
+		</header>
+
+		<main>
+			<div class="main-wrapper">
+				<div id="aboutContainer" class="about-display">
+					<h3>smart contract based prediction markets using oracles created through the iExec Oracle Factory</h3>
+				</div>
+
+				<h2>User History</h2>
+
+				<div class="input-container">
+					<input id="userSearchButton" class="button" type="button" value="Search" disabled onclick=""/>
+				</div>
+
+				<div id="dataContainer">
+					<h3>search for user history...</h3>
+				</div>
+
+				<h2>About</h2>
+				<div id="usageContainer" class="about-display">
+					<h3>
+                        searches for all user action events within the exotic markets smart contract
+                    </h3>
+                </div>
+			</div>
+		</main>
+
+		<footer>
+			<div class="footer-wrapper">
+
+				<div class="footer-left">
+					<div>
+						<a class="white-link " href="https://github.com/j48/iexec-apps/tree/main/v6/offchain-python-randomness-uint256" target="_blank">
+                        <img src="./static/img/misc/github.png"  class="github-logo">
+                        </a>
+					</div>
+				</div>
+
+				<div class="footer-center">
+					<div>
+						<img src="./static/img/misc/iexec-logo.png"  class="iexec-logo">
+					</div>
+					<div>
+						<a class="iexec-link" href="https://iexec.dev" target="_blank">
+						<h2>/home</h2>
+						</a>
+					</div>
+				</div>
+
+				<div class="footer-right">
+					<div>
+						<a class="white-link " href="https://www.ethdenver.com/" target="_blank">
+						<img src="./static/img/misc/eth-denver.png" class="ethdenver-logo">
+						</a>
+					</div>
+				</div>
+
+			</div>
+		</footer>
+
+		<script type="text/javascript" src="./static/js/web3/web3.min.js"></script>
+		<script type="text/javascript" src="./static/js/app/abi/exoticABI.js"></script>
+		<script type="text/javascript" src="./static/js/app/abi/oracleABI.js"></script>
+
+		<script>
+			async function init(){
+				const app = await import("./static/js/app/app.js");
+				const user = await import("./static/js/app/user.js");
+				const exoticContract = {address: "0x204AA0cC951D38A8E12a1CF70B220c2555c9A016", abi: exoticABI};
+				const userSearchButton = document.getElementById('userSearchButton');
+
+				async function populateUserData(addr) {
+					const filter = {user: addr };
+
+					return app.eventData(exoticContract, "UserAction", filter)
+						.then( (results) => {
+							return results;
+						});
+				}
+
+				async function searchUser(){
+					// get user address
+					const userAddress = "0xDdb291a72e9005bFB2c2F44Aca6bA5047318fd2D";
+					const userData = await populateUserData(userAddress);
+					const dataContainer = document.getElementById("dataContainer");
+
+					// build table with data
+					await user.load(userData.reverse());
+
+					// disable
+					// userSearchButton.disabled = true;
+
+				}
+
+				// enable button
+				userSearchButton.disabled = false;
+				userSearchButton.onclick = searchUser;
+
+				// wait for click
+			}
+
+			init();
+		</script>
+
+	</body>
+
+</html>
+

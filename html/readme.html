@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+	<head>
+			<meta charset="utf-8">
+			<title>Decentralized Exotic Prediction Markets</title>
+			<link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
+			<link rel="stylesheet" type="text/css" href="./static/css/style.css"/>
+	</head>
+
+	<body>
+		<div class="body-logo"></div>
+		<header>
+				<div class="header-header display-none">
+					<div class="header-home noselect">
+						<div class="home-element"><img src="./static/img/misc/iexecDeal.png" class="home-logo"></div>
+						<div><h3 class="home-element">home</h3></div>
+					</div>
+				</div>
+			<div class="header-wrapper">
+				<h1 class="iexec-stroke">Exotic Prediction Markets</h1>
+				<h2 class="iexec-stroke">Oracle Factory Edition</h2>
+
+				<div class="header-body">
+					<div class="source-logo iexec-stroke">
+						<div>
+							<h3 class="header-h3">Powered By</h3>
+						</div>
+						<a class="iexec-link" href="https://iex.ec" target="_blank">
+						<img src="./static/img/misc/iexec-white.png" class="iexec-logo">
+						</a>
+					</div>
+				</div>
+			</div>
+		</header>
+
+		<main>
+			<div class="main-wrapper">
+                <h2>README.txt</h2>
+
+				<div id="readmeContainer">
+					<h2>V1</h2>
+					<li>coded in vanilla JS</li>
+                    <li>all market data is fetched using on-chain events and filtering is done client-side (limited to latest 50 events)</li>
+                    <li>betting is based on single-contract markets with unlimited shares</li>
+                    <li>for certain markets this betting format requires a buffer time between bets ending and time the market determination value can be set by the oracle</li>
+					<li>this is an MVP / early stage alpha</li>
+                    <h2>V2+ (potential)</h2>
+                    <li>add a limit on shares for each market where creator sets initial price</li>
+                    <li>add ability to buy and sell shares to create a proper prediction market (would work like a DEX)</li>
+                    <li>create multi-contract markets</li>
+                    <li>create subgraph</li>
+                    <li>replace results based on event data with subgraph API support</li>
+                    <li>optimize smart contract (gas savings, remove redundancies...)</li>
+                    <li>add ability for different token based markets</li>
+                    <li>add multiple oracles for a final medianized/aggregate value</li>
+                    <li>add string and boolean based markets</li>
+                    <li>optimize website for more fluid design</li>
+					<li>improve UX/UI</li>
+                    <li>use node.js for easier integration into iExec dapp ecosystem for any future upgrades by community</li>
+                    <li>create a better user experience when connecting to oracle factory website</li>
+                    <li>add more user-friendly oracle read/update options</li>
+					<li>add more wallet options</li>
+					<li>add market creator allow list to avoid spam (if needed)</li>
+
+					<h2>Overview</h2>
+					<h3>User must create a market with 5 times in mind</h3>
+
+					<li>market betting start - when the market is created</li>
+					<li>market betting end - when all betting stops</li>
+					<li>market close - when the markets associated oracle value can be used to determine the outcome of the market</li>
+					<li>market pool refund - when all users can claim a full refund if market isnt closed in time</li>
+					<li>market pool drain - when market creator can drain all funds still left in the pool</li>
+
+					<h3>For example</h3>
+
+					<li>ETH will be Over/Under 3000 after April 4, 2022</li>
+					<li>Market created on April 1, 2022 when the createMarket function was used</li>
+					<li>Betting ends on April 2, 2022 and users must wait until the market close time</li>
+					<li>Market close begins on April 4, 2022 in which the market value can be set by the oracle and determine the outcome</li>
+					<li>Market pool refund begins on April 5, 2022 if not closed within 24hrs</li>
+					<li>Market pool drain can happen any time after June 4, 2022 where market creator can empty what is left in the market pool</li>
+					<li>all time offsets (drain offset, refund offset ...) can be changed by the contract owner</li>
+					</br>
+					<h3>betting in this format favors users that bid at the last moment for certain markets</h3>
+					<h3>this is why a limit on shares and trading of shares may be introduced in v2</h3>
+
+					<h2>see the github README.txt for more information</h2>
+				</div>
+
+			</div>
+		</main>
+
+		<footer>
+			<div class="footer-wrapper">
+
+				<div class="footer-left">
+					<div>
+						<a class="white-link " href="https://github.com/" target="_blank">
+						<img src="./static/img/misc/github.png"  class="github-logo">
+						</a>
+					</div>
+				</div>
+
+				<div class="footer-center">
+					<div>
+						<a class="iexec-link" href="./markets.html" target="_blank">
+						<h2>/home</h2>
+						</a>
+					</div>
+				</div>
+
+				<div class="footer-right">
+					<div>
+						<a class="white-link " href="https://www.ethdenver.com/" target="_blank">
+						<img src="./static/img/misc/eth-denver.png" class="ethdenver-logo">
+						</a>
+					</div>
+				</div>
+
+			</div>
+		</footer>
+
+		<script>
+			async function init(){
+			}
+
+			init();
+		</script>
+
+	</body>
+
+</html>
+

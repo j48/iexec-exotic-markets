@@ -3,7 +3,7 @@ Exotic Prediction Markets using the iExec Oracle Factory
 
 https://iexec.dev/ethdenver2022
 
-ETHDenver 2022 submission - only for the iExec bounty (not doxed science fair presentation format)
+ETHDenver 2022 submission - only for the iExec bounty
 https://dorahacks.io/buidl/2494
 
 Current Status: MVP/alpha

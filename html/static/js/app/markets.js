@@ -1,44 +1,6 @@
-//createMarket
-//returnValues
-//drainTime: "1653001188"
-//marketId: "1"
-//name: "test market 1"
-//payoutTime: "1647749110"
-//refundTime: "1647827588"
-//stopTime: "1647746110"
-//user: "0xDdb291a72e9005bFB2c2F44Aca6bA5047318fd2D"
-//value: "500"
-
-const actionEnum = {"0": "None", "1": "Bet", "2": "Claim", "3": "Refund"};
-const resultEnum = {"0": "None", "1": "Under", "2": "Over", "3": "Tie"};
-
-const nodeURL = "https://goerli.infura.io/v3/2e1357de2d5041e8b4a7e9d09c1a28f2";
-const marketAddress = "0x204AA0cC951D38A8E12a1CF70B220c2555c9A016";
-const tokenDecimals = 18;
-const valueDecimals = 18;
-const uriCharacters = 24;
-
-function addDecimal(num, move, fixed=18){
-    return parseFloat(Number((parseInt(num) / 10**move).toFixed(fixed))).toFixed(fixed).replace(/\.?0+$/,"");
-
-}
-
-function prettyDate2(t){
-  //return new Date(UNIX_timestamp * 1000).toISOString().slice(0, 19).replace('T', ' ');
-  return t.toISOString().slice(0, 19).replace('T', ' ');
-}
-
-function prettyDate(a){
-  var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  var year = a.getFullYear();
-  var month = months[a.getMonth()];
-  var date = a.getDate();
-  var hour = a.getHours();
-  var min = a.getMinutes() < 10 ? '0' + a.getMinutes() : a.getMinutes();
-  var sec = a.getSeconds() < 10 ? '0' + a.getSeconds() : a.getSeconds();
-  var time = month + ' ' + date + ', ' + year + ' ' + hour + ':' + min + ':' + sec ;
-  return time;
-}
+import { valueDecimals } from "./data.js";
+import { prettyDate, addDecimal } from "./tools.js";
+import { eventData } from "./app.js";
 
 function addMarketsEvents(data, elementId="dataContainer", action="new"){
 
@@ -87,10 +49,10 @@ function addMarketsEvents(data, elementId="dataContainer", action="new"){
 
         // dates
         const now = new Date();
-        const stopTime = new Date(entry.returnValues.stopTime * 1000);
-        const payoutTime = new Date(entry.returnValues.payoutTime * 1000);
-        const refundTime = new Date(entry.returnValues.refundTime * 1000);
-        const drainTime = new Date(entry.returnValues.drainTime * 1000);
+        const stopTime = new Date(parseInt(entry.returnValues.stopTime) * 1000);
+        const payoutTime = new Date(parseInt(entry.returnValues.payoutTime) * 1000);
+        const refundTime = new Date(parseInt(entry.returnValues.refundTime) * 1000);
+        const drainTime = new Date(parseInt(entry.returnValues.drainTime) * 1000);
 
         // date color
         let stopTimeColor = "time-white";
@@ -186,7 +148,7 @@ function addMarketsEvents(data, elementId="dataContainer", action="new"){
 
 }
 
-export async function load(eventData){
+async function populateMarkets(eventData){
     const dataContainer = document.getElementById("dataContainer");
 
     if(eventData.error){
@@ -204,5 +166,22 @@ export async function load(eventData){
     //web3Connect.setAttribute("class", "connect-button connection-inactive");
     //web3Status.innerHTML = `<span>Connect Web3 Wallet</span>`;
     //web3Connect.onclick = connectWallet;
+
+}
+
+async function populateMarketsData() {
+        const filter = { };
+
+        return eventData("MarketCreated", filter)
+            .then( (results) => {
+                return results;
+            });
+    }
+
+export async function load(){
+    // rate-limit?
+    const marketsData = await populateMarketsData();
+    const dataContainer = document.getElementById("dataContainer");
+    await populateMarkets(marketsData.reverse());
 
 }

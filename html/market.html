@@ -93,6 +93,11 @@
 						</div>
 
 						<div class="input-container">
+							<h3 class="iexec-link" >Result</h3>
+							<input type="text" id="marketResult" class="smart-contract-output" maxlength="66" placeholder="0xd3987060257095bfade672042b3b406b1862dc010ce70bd9b37e3bab59020dab" readonly>
+						</div>
+
+						<div class="input-container">
 							<h3 class="iexec-link" >Status</h3>
 							<input type="text" id="marketStatus" class="smart-contract-output" maxlength="66" placeholder="0xd3987060257095bfade672042b3b406b1862dc010ce70bd9b37e3bab59020dab" readonly>
 						</div>
@@ -106,8 +111,23 @@
 						</div>
 
 						<div class="input-container">
-							<h3 class="iexec-link" >Result</h3>
-							<input type="text" id="marketResult" class="smart-contract-output" maxlength="66" placeholder="0xd3987060257095bfade672042b3b406b1862dc010ce70bd9b37e3bab59020dab" readonly>
+							<h3 class="iexec-link" >Pool Amount Left to Claim</h3>
+							<input type="text" id="marketClaim" class="smart-contract-output" maxlength="64" placeholder="0" readonly>
+						</div>
+
+						<div class="input-container">
+							<h3 class="iexec-link" >Total Pool Amount</h3>
+							<input type="text" id="marketPool" class="smart-contract-output" maxlength="64" placeholder="0" readonly>
+						</div>
+
+						<div class="input-container">
+							<h3 class="iexec-link" >Total Bets for Over</h3>
+							<input type="text" id="marketBetOver" class="smart-contract-output" maxlength="64" placeholder="0" readonly>
+						</div>
+
+						<div class="input-container">
+							<h3 class="iexec-link" >Total Bets for Under</h3>
+							<input type="text" id="marketBetUnder" class="smart-contract-output" maxlength="64" placeholder="0" readonly>
 						</div>
 
 						<div class="input-container">
@@ -132,8 +152,23 @@
 						</div>
 
 						<div class="input-container">
+							<h3 class="iexec-link" >Creator Address</h3>
+							<input type="text" id="marketCreator" class="smart-contract-output" maxlength="64" placeholder="0x" readonly>
+						</div>
+
+					</div>
+				</div>
+
+				<div id="oracleContainer" class="hide">
+					<h2>Oracle Data for Market</h2>
+					<h3>oracle value must be updated after the market decision time</h3>
+					<div class="order-wrapper">
+						<div class="input-container">
 							<h3 class="iexec-link" >Oracle ID</h3>
 							<input type="text" id="marketOracleId" class="smart-contract-output hex-input" maxlength="64" placeholder="0x" readonly>
+						</div>
+						<div class="input-container">
+								<input id="viewOracleButton" class="button task-block hide" type="button" value="view Oracle" disabled onclick=""/>
 						</div>
 						<div class="input-container">
 							<h3 class="iexec-link" >Oracle URI</h3>
@@ -141,42 +176,11 @@
 						</div>
 
 						<div class="input-container">
-							<h3 class="iexec-link" >Creator Address</h3>
-							<input type="text" id="marketCreator" class="smart-contract-output" maxlength="64" placeholder="0x" readonly>
-						</div>
-
-						<div class="input-container">
-							<h3 class="iexec-link" >Pool Amount Left to Claim</h3>
-							<input type="text" id="marketClaim" class="smart-contract-output" maxlength="64" placeholder="0" readonly>
-						</div>
-
-						<div class="input-container">
-							<h3 class="iexec-link" >Total Pool Amount</h3>
-							<input type="text" id="marketPool" class="smart-contract-output" maxlength="64" placeholder="0" readonly>
-						</div>
-
-						<div class="input-container">
-							<h3 class="iexec-link" >Total Bets for Over</h3>
-							<input type="text" id="marketBetOver" class="smart-contract-output" maxlength="64" placeholder="0" readonly>
-						</div>
-
-						<div class="input-container">
-							<h3 class="iexec-link" >Total Bets for Under</h3>
-							<input type="text" id="marketBetUnder" class="smart-contract-output" maxlength="64" placeholder="0" readonly>
-						</div>
-
-					</div>
-				</div>
-
-				<div id="oracleContainer" class="hide">
-					<h2>Oracle</h2>
-					<div class="order-wrapper">
-						<div class="input-container">
-							<h3 class="iexec-link" >Oracle Value</h3>
+							<h3 class="iexec-link" >Oracle Value used for Market Result</h3>
 							<input type="text" id="marketOracleValue" class="smart-contract-output" maxlength="64" placeholder="0" readonly>
 						</div>
 						<div class="input-container">
-							<h3 class="iexec-link" >Oracle Update Time</h3>
+							<h3 class="iexec-link" >Oracle Value Update Time</h3>
 							<input type="text" id="marketOracleTime" class="smart-contract-output" maxlength="64" placeholder="0" readonly>
 						</div>
 
@@ -196,7 +200,7 @@
 
 				<div class="footer-left">
 					<div>
-						<a class="white-link " href="https://github.com/" target="_blank">
+						<a class="white-link " href="https://github.com/j48/iexec-exotic-markets" target="_blank">
 						<img src="./static/img/misc/github.png"  class="github-logo">
 						</a>
 					</div>
@@ -204,7 +208,7 @@
 
 				<div class="footer-center">
 					<div>
-						<a class="iexec-link" href="./markets.html" target="_blank">
+						<a class="iexec-link" href="./markets.html">
 						<h2>/home</h2>
 						</a>
 					</div>
@@ -222,64 +226,14 @@
 		</footer>
 
 		<script type="text/javascript" src="./static/js/web3/web3.min.js"></script>
-		<script type="text/javascript" src="./static/js/app/abi/exoticABI.js"></script>
-		<script type="text/javascript" src="./static/js/app/abi/oracleABI.js"></script>
 
 		<script>
 			const params = new URLSearchParams(window.location.search);
-			const exoticContract = {address: "0x204AA0cC951D38A8E12a1CF70B220c2555c9A016", abi: exoticABI};
 
 			async function init(_params){
-				const app = await import("./static/js/app/app.js");
 				const market = await import("./static/js/app/market.js");
-				const titleContainer = document.getElementById("market-title-h2");
 
-				async function populateMarketData(mId) {
-					return app.marketData(exoticContract, mId )
-						.then( (results) => {
-							return results;
-						});
-				}
-
-				async function fetchMarket(mId){
-					const marketData = await populateMarketData(mId);
-
-					// build table with data
-					// console.log(marketData);
-					if(marketData.startTime == "0"){
-						titleContainer.innerHTML = "Market " + marketId + " does not Exist";
-					}else{
-						market.load(mId, marketData);
-						}
-
-
-				}
-
-				const marketId = _params.get("id");
-
-				if(Number.isSafeInteger(parseInt(marketId))){
-				    titleContainer.innerHTML = "Market " + marketId;
-				    // rate-limit?
-					try {
-						await fetchMarket(marketId);
-
-					} catch (error) {
-						const parsedError = {error:error.name,  msg:error.message};
-						console.log(parsedError);
-						// populate on screen error msg
-					}
-
-				} else{
-				    titleContainer.innerHTML = "No Market ID Found";
-				}
-
-				const ethereumButton = document.getElementById("web3Connect");
-				//const showAccount = document.querySelector('.showAccount');
-
-				ethereumButton.addEventListener('click', () => {
-				  app.connectMetaMask2();
-				});
-
+				market.load(_params);
 
 			}
 

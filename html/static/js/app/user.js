@@ -1,21 +1,5 @@
-// UserAction
-// address: "0x534deD09610dCd4D4A69345614506BD1B8a882b0"
-// blockHash: "0xd5ec50dc9685c07a0d1c9d0f16dcf8debebffbb88fcf5fc625093b4e7206585c"
-// blockNumber: 6567588
-// signature: "0x84ae07c4cfb57e6439c6c00756fb8a50759ee0270625997e636660441fb0d19f"
-// transactionHash: "0x270beb7b540c4af3c64534b6d6d6145f94052075bc4da78d4a3a12627a8f2570"
-// returnValues:
-//      action: "1"
-//      amount: "66666666"
-//      marketId: "1"
-//      result: "1"
-//      user: "0xDdb291a72e9005bFB2c2F44Aca6bA5047318fd2D"
-
-const actionEnum = {"0": "None", "1": "Bet", "2": "Claim", "3": "Refund"};
-const resultEnum = {"0": "None", "1": "Under", "2": "Over", "3": "Tie"};
-
-const decimals = 18;
-
+import { resultEnum, actionEnum } from "./data.js";
+import { eventData } from "./app.js";
 
 function showEntryDetails(){
     const parentContainer = this.parentNode;
@@ -157,7 +141,7 @@ function addUserEvents(data, elementId="dataContainer", action="new"){
 
 }
 
-export async function load(eventData){
+export async function populateUserData(eventData){
     const dataContainer = document.getElementById("dataContainer");
 
     if(eventData.error){
@@ -175,5 +159,40 @@ export async function load(eventData){
     //web3Connect.setAttribute("class", "connect-button connection-inactive");
     //web3Status.innerHTML = `<span>Connect Web3 Wallet</span>`;
     //web3Connect.onclick = connectWallet;
+
+}
+
+async function populateUserData(addr) {
+        const filter = {user: addr };
+
+        return eventData("UserAction", filter)
+            .then( (results) => {
+                return results;
+            });
+    }
+
+async function searchUser(){
+        // demo get user address
+        const userAddress = "0xDdb291a72e9005bFB2c2F44Aca6bA5047318fd2D";
+        const userData = await populateUserData(userAddress);
+        const dataContainer = document.getElementById("dataContainer");
+
+        // build table with data
+        await populateUserData(userData.reverse());
+
+        // disable
+        // userSearchButton.disabled = true;
+
+    }
+
+export function load(){
+
+    const userSearchButton = document.getElementById('userSearchButton');
+
+    // enable button
+    userSearchButton.disabled = false;
+    userSearchButton.onclick = searchUser;
+
+    // wait for click
 
 }

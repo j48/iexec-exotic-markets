@@ -53,7 +53,7 @@
 				<div id="usageContainer" class="about-display">
 					<h3>This Dapp uses the <a class="iexec-link" href="https://oracle-factory.iex.ec/gallery" target="_blank">iExec Oracle Factory</a> </h3>
 					<h3>This Dapp is deployed on the <a class="iexec-link" href="https://explorer.iex.ec/viviani" target="_blank">iExec Sidechain Testnet</a> (Viviani) </h3>
-					<h3>Request Testnet xRLC <a class="iexec-link" href="https://faucet.iex.ec/viviani" target="_blank">here</a> </h3>
+					<h3>Request Testnet nRLC <a class="iexec-link" href="https://faucet.iex.ec/viviani" target="_blank">here</a> </h3>
 					<h2><a class="iexec-link" href="./readme.html" target="_blank">README.txt</a></h2>
 				</div>
 
@@ -65,7 +65,7 @@
 
 				<div class="footer-left">
 					<div>
-						<a class="white-link " href="https://github.com/" target="_blank">
+						<a class="white-link " href="https://github.com/j48/iexec-exotic-markets" target="_blank">
 						<img src="./static/img/misc/github.png"  class="github-logo">
 						</a>
 					</div>
@@ -73,7 +73,7 @@
 
 				<div class="footer-center">
 					<div>
-						<a class="iexec-link" href="./markets.html" target="_blank">
+						<a class="iexec-link" href="./markets.html">
 						<h2>/home</h2>
 						</a>
 					</div>
@@ -91,38 +91,12 @@
 		</footer>
 
 		<script type="text/javascript" src="./static/js/web3/web3.min.js"></script>
-		<script type="text/javascript" src="./static/js/app/abi/exoticABI.js"></script>
-		<script type="text/javascript" src="./static/js/app/abi/oracleABI.js"></script>
 
 		<script>
 			async function init(){
-				const app = await import("./static/js/app/app.js");
 				const markets = await import("./static/js/app/markets.js");
-				const exoticContract = {address: "0x204AA0cC951D38A8E12a1CF70B220c2555c9A016", abi: exoticABI};
 
-				async function populateMarketsData() {
-					const filter = { };
-
-					return app.eventData(exoticContract, "MarketCreated", filter)
-						.then( (results) => {
-							return results;
-						});
-				}
-
-				async function fetchMarkets(){
-					const marketsData = await populateMarketsData();
-					const dataContainer = document.getElementById("dataContainer");
-
-					// build table with data
-					// console.log(marketsData);
-					markets.load(marketsData.reverse());
-
-
-				}
-
-
-				// rate-limit?
-				await fetchMarkets();
+				markets.load();
 			}
 
 			init();

@@ -1,4 +1,4 @@
-const exoticABI = [
+export const exoticABI = [
 	{
 		"inputs": [
 			{

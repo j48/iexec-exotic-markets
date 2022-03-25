@@ -1,5 +1,12 @@
 # iexec-exotic-markets
- iexec exotic markets MVP ethdenver2022
+Exotic Prediction Markets using the iExec Oracle Factory
+
+https://iexec.dev/ethdenver2022
+
+ETHDenver 2022 submission - only for the iExec bounty (not doxed science fair presentation format)
+https://dorahacks.io/buidl/2494
+
+Current Status: MVP/alpha
 
 this project is an over/under exotic market where users bet whether a certain iExec oracle value will be over or under the defined market value after the completion time. In cases where the value is equal, it is considered "over" as opposed to "under".
 
@@ -93,5 +100,7 @@ Currently only the main currency is used (ETH, xRLC). The ability to add specifi
 Market payout is currently 1:1. If total market pool is 10 xRLC, the winners equally split the full 10 xRLC. Market creator could receive a % in the future.
 When a market is closed winners can claim their payout. The specific market tokens the user holds are burned and then the user is sent their appropriate winnings.
 After drainTime, the market creator can drain any unclaimed winnings or refunds if desired. This is a solution for any users that may lose their private key.
+
+Cont... later
 
 

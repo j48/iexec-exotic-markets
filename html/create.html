@@ -85,6 +85,7 @@
 					<h3>oracle must return a number and have been updated at least once</h3>
 					<h3>market name should be as minimal and understandable as possible (limited to 32 bytes)</h3>
 					<h3>betting deadline must be equal to or before the market determination time</h3>
+					<h3>ties count as Over</h3>
 					<h3>markets currently have a 30 day deadline window set</h3>
 					<h3>times are based on UTC and sent to the smart contract as a UNIX timestamp</h3>
 					<br/>
@@ -99,7 +100,7 @@
 
 				<div class="footer-left">
 					<div>
-						<a class="white-link " href="https://github.com/" target="_blank">
+						<a class="white-link " href="https://github.com/j48/iexec-exotic-markets" target="_blank">
 						<img src="./static/img/misc/github.png"  class="github-logo">
 						</a>
 					</div>
@@ -107,7 +108,7 @@
 
 				<div class="footer-center">
 					<div>
-						<a class="iexec-link" href="./markets.html" target="_blank">
+						<a class="iexec-link" href="./markets.html">
 						<h2>/home</h2>
 						</a>
 					</div>
@@ -125,33 +126,12 @@
 		</footer>
 
 		<script type="text/javascript" src="./static/js/web3/web3.min.js"></script>
-		<script type="text/javascript" src="./static/js/app/abi/exoticABI.js"></script>
-		<script type="text/javascript" src="./static/js/app/abi/oracleABI.js"></script>
 
 		<script>
 			async function init(){
-				const app = await import("./static/js/app/app.js");
-				const exoticContract = {address: "0x204AA0cC951D38A8E12a1CF70B220c2555c9A016", abi: exoticABI};
+				const create = await import("./static/js/app/create.js");
 
-				const now = new Date(new Date().toString().split('GMT')[0]+' UTC').toISOString().slice(0, 16);
-
-				const bettingDeadline = document.getElementById("marketStop");
-				const marketDeadline = document.getElementById("marketPayout");
-
-				bettingDeadline.min= now;
-				bettingDeadline.value= now;
-
-				marketDeadline.min = now;
-				marketDeadline.value = now;
-
-				// rate-limit?
-
-				const ethereumButton = document.getElementById("web3Connect");
-				//const showAccount = document.querySelector('.showAccount');
-
-				ethereumButton.addEventListener('click', () => {
-				  app.connectMetaMask();
-				});
+				create.load();
 
 			}
 

@@ -40,13 +40,17 @@
 
 				<div id="readmeContainer">
 					<h2>V1</h2>
+					<li>this is an MVP / early stage alpha</li>
 					<li>coded in vanilla JS</li>
                     <li>all market data is fetched using on-chain events and filtering is done client-side (limited to latest 50 events)</li>
                     <li>betting is based on single-contract markets with unlimited shares</li>
                     <li>for certain markets this betting format requires a buffer time between bets ending and time the market determination value can be set by the oracle</li>
-					<li>this is an MVP / early stage alpha</li>
+
                     <h2>V2+ (potential)</h2>
-                    <li>add a limit on shares for each market where creator sets initial price</li>
+                    <li>clean up code </li>
+					<li>rewrite MetaMask usage to be more fluid</li>
+					<li>improve UX/UI</li>
+					<li>add a limit on shares for each market where creator sets initial price</li>
                     <li>add ability to buy and sell shares to create a proper prediction market (would work like a DEX)</li>
                     <li>create multi-contract markets</li>
                     <li>create subgraph</li>
@@ -56,7 +60,6 @@
                     <li>add multiple oracles for a final medianized/aggregate value</li>
                     <li>add string and boolean based markets</li>
                     <li>optimize website for more fluid design</li>
-					<li>improve UX/UI</li>
                     <li>use node.js for easier integration into iExec dapp ecosystem for any future upgrades by community</li>
                     <li>create a better user experience when connecting to oracle factory website</li>
                     <li>add more user-friendly oracle read/update options</li>
@@ -96,7 +99,7 @@
 
 				<div class="footer-left">
 					<div>
-						<a class="white-link " href="https://github.com/" target="_blank">
+						<a class="white-link " href="https://github.com/j48/iexec-exotic-markets" target="_blank">
 						<img src="./static/img/misc/github.png"  class="github-logo">
 						</a>
 					</div>
@@ -104,7 +107,7 @@
 
 				<div class="footer-center">
 					<div>
-						<a class="iexec-link" href="./markets.html" target="_blank">
+						<a class="iexec-link" href="./markets.html">
 						<h2>/home</h2>
 						</a>
 					</div>
@@ -123,6 +126,7 @@
 
 		<script>
 			async function init(){
+
 			}
 
 			init();

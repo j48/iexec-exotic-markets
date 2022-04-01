@@ -664,7 +664,7 @@ export const exoticABI = [
 					},
 					{
 						"internalType": "uint256",
-						"name": "poolUnder",
+						"name": "poolOver",
 						"type": "uint256"
 					},
 					{

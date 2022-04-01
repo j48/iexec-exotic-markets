@@ -1,8 +1,9 @@
-import { valueDecimals } from "./data.js";
-import { prettyDate, addDecimal } from "./tools.js";
-import { eventData } from "./app.js";
+import { prettyDate, addDecimal } from "./tools/misc.js";
+import { eventData } from "./web3/helpers.js";
+import { exoticContract } from "./data/chain.js";
+import { valueDecimals } from "./data/markets.js";
 
-function addMarketsEvents(data, elementId="dataContainer", action="new"){
+function addMarketsEvents(data, elementId = "dataContainer", action = "new") {
 
     const table = document.getElementById(elementId);
 
@@ -19,21 +20,21 @@ function addMarketsEvents(data, elementId="dataContainer", action="new"){
         newEntry.id = `entry-id-${entryId}`;
         newEntry.classList.add("entry-container");
 
-        if(entryId % 2 == 0){
+        if (entryId % 2 == 0) {
             newEntry.classList.add("entry-even");
-        }else{
+        } else {
             newEntry.classList.add("entry-odd");
         }
 
-        if(entryId == 1){
+        if (entryId == 1) {
             //only id 1 has entry-start
             newEntry.classList.add("entry-start");
-        }else{
+        } else {
             // remove previous entry as end
             // this will allow for transition
             const previousEntry = document.getElementById(`entry-id-${entryId-1}`);
             previousEntry.classList.remove("entry-end");
-            if(entryId != 2){
+            if (entryId != 2) {
                 previousEntry.classList.add("entry-middle");
             }
         }
@@ -60,24 +61,24 @@ function addMarketsEvents(data, elementId="dataContainer", action="new"){
         let refundTimeColor = "time-white";
         let drainTimeColor = "time-white";
 
-        if(now > stopTime){
+        if (now > stopTime) {
             stopTimeColor = "time-red";
-        }else{
+        } else {
             stopTimeColor = "time-green";
         }
 
-        if(now > payoutTime){
+        if (now > payoutTime) {
             payoutTimeColor = "time-green";
         }
 
-        if(now > refundTime){
+        if (now > refundTime) {
             payoutTimeColor = "time-red";
-            refundTimeColor = "time-green";
+            refundTimeColor = "time-red";
         }
 
-        if(now > drainTime){
+        if (now > drainTime) {
             drainTimeColor = "time-green";
-             refundTimeColor = "time-red";
+            refundTimeColor = "time-red";
         }
 
         //convert value
@@ -105,22 +106,19 @@ function addMarketsEvents(data, elementId="dataContainer", action="new"){
                         <div class="entry-results-title">over/under ${convertedValue}</div>
                         <div class="entry-results-title">after ${prettyDate(payoutTime)}</div>
                     </div>
-                        <div class="entry-results-result-label">all betting stops at</div>
+                        <div class="entry-results-result-label text-output">all predictions stop at</div>
                         <div class="entry-results-result-data">
                             <span class="uint256-span ${stopTimeColor}">${prettyDate(stopTime)}</span>
                         </div>
-                        <div class="entry-results-result-label">market can be closed after</div>
+                        <div class="entry-results-result-label text-output">market can be closed after</div>
                         <div class="entry-results-result-data">
                             <span class="uint256-span ${payoutTimeColor}">${prettyDate(payoutTime)}</span>
                         </div>
-                        <div class="entry-results-result-label">market must be closed before</div>
+                        <div class="entry-results-result-label text-output">market must be closed before</div>
                         <div class="entry-results-result-data">
                             <span class="uint256-span ${refundTimeColor}">${prettyDate(refundTime)}</span>
                         </div>
-                        <div class="entry-results-result-label">unclaimed funds can be drained after</div>
-                        <div class="entry-results-result-data">
-                            <span class="uint256-span ${drainTimeColor}">${prettyDate(drainTime)}</span>
-                        </div>
+
                     </div>
                 </div>
             </div>
@@ -144,19 +142,19 @@ function addMarketsEvents(data, elementId="dataContainer", action="new"){
 
         ++newEntryCount;
 
-        });
+    });
 
 }
 
-async function populateMarkets(eventData){
+async function populateMarkets(eventData) {
     const dataContainer = document.getElementById("dataContainer");
 
-    if(eventData.error){
+    if (eventData.error) {
         dataContainer.innerHTML = eventData.error;
-    }else if(eventData != null && eventData.length != 0){
+    } else if (eventData != null && eventData.length != 0) {
         dataContainer.innerHTML = "";
         await addMarketsEvents(eventData, "dataContainer", "new");
-    }else{
+    } else {
         dataContainer.innerHTML = "no market events found, contact admin";
     }
 
@@ -170,15 +168,15 @@ async function populateMarkets(eventData){
 }
 
 async function populateMarketsData() {
-        const filter = { };
+    const filter = {};
 
-        return eventData("MarketCreated", filter)
-            .then( (results) => {
-                return results;
-            });
-    }
+    return eventData("MarketCreated", filter)
+        .then((results) => {
+            return results;
+        });
+}
 
-export async function load(){
+export async function load() {
     // rate-limit?
     const marketsData = await populateMarketsData();
     const dataContainer = document.getElementById("dataContainer");

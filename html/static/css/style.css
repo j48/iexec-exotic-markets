@@ -28,7 +28,7 @@
      margin: 0 25px 0 25px;
      background-color: #070307;
      background-repeat: no-repeat;
-     background-image: radial-gradient(50% 50% at 50% 50%,#303013 0,#070307 100%);
+     background-image: radial-gradient(50% 50% at 50% 50%,#303013 0,#070307 75%);
 }
 
 h1{
@@ -36,6 +36,7 @@ h1{
     font-size: 55px;
     font-weight: 800;
     text-align:center;
+    margin: 10px;
 }
 
 h2{
@@ -451,7 +452,7 @@ header {
 
 .entry-markets-results-body{
     width: 100%;
-    height: 375px;
+    height: 400px;
     display: flex;
     justify-content: flex-start;
     flex-direction: row;
@@ -517,6 +518,7 @@ header {
     font-size: 18px;
     font-weight: 100;
     color: white;
+    margin: 5px;
 }
 
 .entry-results-title{
@@ -727,8 +729,8 @@ header {
     background-color:rgba(255, 255, 0, 0.1);
 }
 
-/* order ================================== */
-#orderContainer{
+/* market ================================== */
+#marketContainer{
     display: flex;
     align-items: center;
     justify-content: center;
@@ -744,7 +746,7 @@ header {
     margin-bottom: 25px;
 }
 
-.order-wrapper{
+.market-wrapper{
     display: flex;
     align-items: center;
     justify-content: center;
@@ -769,10 +771,7 @@ header {
      margin: 10px;
 }
 
-.smart-contract-input{
-    max-width: 700px;
 
-}
 
 /* Misc ================================== */
  #web3Status {
@@ -784,20 +783,21 @@ header {
 }
 
 .hide{
-visibility:hidden;
+    visibility:hidden;
 }
 
 .display-none{
-display:none;
+    display:none;
 }
 
 .ipfs-info{
-     text-align: center;
+    text-align: center;
 }
 
 
 .smart-contract-input{
     min-width:500px;
+    max-width: 700px;
     width:750px;
     display: flex;
     text-align: center;
@@ -956,7 +956,23 @@ li{
 }
 
 .hex-input{
-    font-size: 16px;
+    font-size: 17px;
+    color: white;
+}
+
+.text-input{
+    font-size: 24px;
+    color: white;
+}
+
+.hex-output{
+    font-size: 17px;
+    color: #faea01;
+}
+
+.text-output{
+    font-size: 24px;
+    color: #faea01;
 }
 
 #oracleContainer{
@@ -975,8 +991,69 @@ li{
     margin-bottom: 25px;
 }
 
-#tokensContainer{
+#tokenContainer{
     display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    overflow:hidden;
+    width: 100%;
+    max-width: 1250px;
+    min-width: 750px;
+    border-radius: 20px;
+    border: 1px solid #faea01;
+    -webkit-box-shadow: 0px 5px 10px 2px rgba(250,234,1,0.5);
+    box-shadow: 0px 5px 10px 2px rgba(250,234,1,0.5);
+    margin-bottom: 25px;
+}
+
+#timeContainer{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    overflow:hidden;
+    width: 100%;
+    max-width: 1250px;
+    min-width: 750px;
+    border-radius: 20px;
+    border: 1px solid #faea01;
+    -webkit-box-shadow: 0px 5px 10px 2px rgba(250,234,1,0.5);
+    box-shadow: 0px 5px 10px 2px rgba(250,234,1,0.5);
+    margin-bottom: 25px;
+}
+
+#claimContainer{
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    overflow:hidden;
+    width: 100%;
+    max-width: 1250px;
+    min-width: 750px;
+    border-radius: 20px;
+    border: 1px solid #faea01;
+    -webkit-box-shadow: 0px 5px 10px 2px rgba(250,234,1,0.5);
+    box-shadow: 0px 5px 10px 2px rgba(250,234,1,0.5);
+    margin-bottom: 25px;
+}
+
+#closeContainer{
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    overflow:hidden;
+    width: 100%;
+    max-width: 1250px;
+    min-width: 750px;
+    border-radius: 20px;
+    border: 1px solid #faea01;
+    -webkit-box-shadow: 0px 5px 10px 2px rgba(250,234,1,0.5);
+    box-shadow: 0px 5px 10px 2px rgba(250,234,1,0.5);
+    margin-bottom: 25px;
+}
+
+#refundContainer{
     align-items: center;
     justify-content: center;
     flex-direction: column;
@@ -993,4 +1070,147 @@ li{
 
 .task-block{
     cursor:default;
+}
+
+.market-flex-row{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+
+}
+
+.market-flex-column{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+
+}
+
+.market-right{
+    width: 100%;
+}
+
+.market-left{
+    width: 100%;
+}
+
+
+.market-container{
+    overflow:hidden;
+    z-index:0;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 5px 20px 5px 20px;
+
+}
+ .market-container > div {
+     margin: 5px;
+}
+
+.market-output{
+    min-width:250px;
+    max-width: 750px;
+    width:100%;
+    display: flex;
+    text-align: center;
+    height:50px;
+    border: 1px solid #faea01;
+    border-radius: 20px;
+    padding: 5px 10px 5px 10px;
+    background-color: #0f0c0d;
+}
+
+.market-input{
+    min-width:250px;
+    max-width: 750px;
+    width:100%;
+    display: flex;
+    text-align: center;
+    height:50px;
+    border: 1px solid #faea01;
+    border-radius: 20px;
+    padding: 5px 10px 5px 10px;
+    background-color: #0f0c0d;
+}
+
+.oracles-container{
+    z-index:1;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 5px 20px 5px 20px;
+
+}
+ .market-container > div {
+     margin: 5px;
+}
+
+/* Dropdown Button */
+.dropbtn {
+  background-color: #04AA6D;
+  color: white;
+  padding: 16px;
+  font-size: 16px;
+}
+
+/* The container <div> - needed to position the dropdown content */
+.dropdown {
+  display: flex;
+  position: relative;
+    width: 50px;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 5px 20px 5px 20px;
+
+}
+
+/* Dropdown Content (Hidden by Default) */
+.oracles-content {
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  min-width: 100px;
+  width: 400px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  border: 1px solid #faea01;
+  z-index: 1;
+  height:100%;
+}
+
+/* Links inside the dropdown */
+.oracles-content a {
+  padding: 12px 16px;
+  text-decoration: none;
+  width:100%;
+  text-align: center;
+  cursor: default;
+
+}
+
+/* Change color of dropdown links on hover */
+.oracles-content a:hover {
+cursor: pointer;
+
+}
+
+.oracle-active{
+color: #faea01;
+background-color: black;
+font-weight: bold;
+
 }

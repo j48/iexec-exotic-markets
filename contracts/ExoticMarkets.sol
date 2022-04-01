@@ -5,31 +5,40 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Supply.sol";
 
-
+    /**
+    * @dev
+    * iExec oracle factory interface
+    *
+    */
 interface OracleCall{
     function getInt(bytes32) view external returns (int256, uint256);
 
 }
 
+    /**
+    * @dev
+    * this contract allows for the creation of decentralized exotic prediction markets where users can predict
+    * whether a certain on-chain oracle value will be over or under a predefined value after the completion time
+    * this contract leverages the iExec Oracle Factory for oracle results
+    * this contract is basically acts as the market creator and escrow to hold collateral for each market
+    * when a user makes a prediction they are issued tokens tied to that specific market and outcome
+    * after a market closes and the oracle value is verified
+    * the user can swap their winning tokens for the appropriate percentage of the total market pool
+    *
+    * a refund time and drain time was incorporated to deal with unclaimed funds and old unclosed markets
+    * game theory should solve most time issues
+    *
+    * contract was coded with the sole intention of only using events to display data in the frontend
+    * thegraph will be incoroporated in any future updates
+    *
+    * contract was coded without researching any other prediction smart contracts for ideas
+    * other (possibly better) solutions may be incoroprated in the future
+    *
+    */
 
-contract OverUnderExoticMarket is Ownable, ERC1155Supply
+contract ExoticMarkets is Ownable, ERC1155Supply
 {
 
-    //using SafeMath for uint256; v2
-
-    // markets can have 1 of 5 statuses
-    //
-    // markets in payoff/void mode are considered ended when pool = 0
-    // optional for creator to "drain" a 0 pool just to set end status
-    // beton - betting active, set when market created
-    // betoff - betting no longer active, waiting for close time (never set, just a placeholder)
-    // payout - set when market closed with valid oracle value update
-    // void - market was not closed within time, set when closed after refund time
-    // end - creator drained all funds after predefined drain time (drain is always optional)
-
-    // status is mainly for event logging and tracking
-
-    // for enum always set an implied none/0 value for index 0
     enum Status {
         NONE,
         BETON,
@@ -39,7 +48,6 @@ contract OverUnderExoticMarket is Ownable, ERC1155Supply
         END
     }
 
-    // user actions when interacting with closed market
     enum Action {
         NONE,
         BET,
@@ -47,7 +55,6 @@ contract OverUnderExoticMarket is Ownable, ERC1155Supply
         REFUND
     }
 
-    // market results
     enum Result {
         NONE,
         UNDER,
@@ -55,59 +62,50 @@ contract OverUnderExoticMarket is Ownable, ERC1155Supply
         TIE
     }
 
-    // storing ALL data in struct (v1) for readability and easy market lookup (it's dirty and beefy)
-    // gas savings will come at a cost and may require separate database to track market data
-    // full market name format should always be read as:
-    // __name__ will be Over/Under __value__ after __endTime__
-    // storing all times is essential or can have constant time offsets set by owner
-    // design decisions are currently 100% for user experience while not using database
+    /**
+    * @dev
+    *
+    * storing ALL data in struct (v1) for readability and easy market lookup (it's dirty and beefy)
+    * gas savings will come at a cost and may require separate database to track market data
+    * full market name format should always be read as:
+    * __name__ will be Over/Under __value__ after __stopTime__
+    * storing all times is essential or can have constant time offsets set by owner
+    * design decisions are currently 100% for user experience while not using database
+    *
+    */
 
     struct Market {
         bytes32 oracleId;
-        bytes32 oracleUri; // uri of oracle for direct link to oracle page
-
-        uint40  startTime; // betting start
-        uint40  stopTime; // betting stop
-        uint40  payoutTime; // when maket is unlocked to accept oracle value for payout
-        uint40  refundTime; // when market becomes void
-        uint40  drainTime; // when creator can claim all pool funds
-        uint40  closeTime; // when market is actually closed via contract function
-
-        Status  status; // enums are 1 byte aka 256 max values (uint8)
+        bytes32 oracleUri;
+        uint40  startTime;
+        uint40  stopTime;
+        uint40  payoutTime;
+        uint40  refundTime;
+        uint40  drainTime;
+        uint40  closeTime;
+        Status  status;
         Result  result;
-
-        uint40  oracleTime; // time when the oracle value was updated (really needed?)
-
-        address creator; // uint160
-
-        int256  value; // oracle factory uses int
-        int256  oracleValue; // oracle value set when market closed
-
+        uint40  oracleTime;
+        address creator;
+        int256  value;
+        int256  oracleValue;
         uint256 poolTotal;
         uint256 poolClaim;
-
-        uint256 poolUnder; // for determining over/under pool balance
-
-        string  name; // always <= 32 bytes
+        uint256 poolOver;
+        string  name;
 
     }
 
-    // decide if owner or market creator define these times
-    uint256 _refundTimeOffset =   86400; // using default of 1 day
-    uint256 _marketTimeOffset = 2592000; // using default of 1 month
-    uint256 _drainTimeOffset  = 5184000; // using default of 2 month
+    uint256 _refundTimeOffset =   86400; // 1 day
+    uint256 _marketTimeOffset = 2592000; // 1 month
+    uint256 _drainTimeOffset  = 5184000; // 2 months
 
-    // track market ids (updated at market creation)
     uint256 _markets;
 
     OracleCall public Oracle;
 
-    // mapping market data to market id
     mapping(uint256 => Market) private _marketData;
 
-    // events being used for populating dapp lists w/o database or subgraph
-
-    // use current time to determine possible market status
 	event MarketCreated(
         uint256 indexed marketId,
         address indexed user,
@@ -116,36 +114,21 @@ contract OverUnderExoticMarket is Ownable, ERC1155Supply
         uint256 stopTime,
         uint256 payoutTime,
         uint256 refundTime,
-        uint256 drainTime);
+        uint256 drainTime
+    );
 
-    // used for user history
     event UserAction(
         uint256 indexed marketId,
         address indexed user,
         Action  indexed action,
         uint256 amount,
-        Result  result);
+        Result  result
+    );
 
     constructor(address oracleFactoryAddr, string memory uri) ERC1155(uri){
         Oracle = OracleCall(oracleFactoryAddr);
     }
 
-    // contract
-
-    // catch error if non-int oracle type
-    function oracleCall(bytes32 oracleId) private view returns (int256, uint256){
-        // can get raw and convert here
-        // unupdated oracle will return (0, 0)
-        // undefined oracle will error
-        try Oracle.getInt(oracleId) returns (int256 v, uint256 t) {
-            return (v, t);
-        } catch {
-            revert("oracleId does not return number");
-        }
-
-    }
-
-    // owner
     function updateTimeOffsets(
 	    uint256 marketTimeOffset,
 	    uint256 refundTimeOffset,
@@ -169,7 +152,13 @@ contract OverUnderExoticMarket is Ownable, ERC1155Supply
         return _markets;
     }
 
-    // creator
+    /**
+    * @dev
+    * only creates market if the oracle has been updated before
+    * will catch non-int oracles and revert
+    *
+    */
+
     function marketCreate(
         bytes32 oracleId,
         bytes32 oracleUri,
@@ -179,18 +168,23 @@ contract OverUnderExoticMarket is Ownable, ERC1155Supply
         string  memory name
     ) public {
 
-        // time requirements
         require(block.timestamp <  stopTime,                            "invalid stop time");
         require(stopTime        <= payoutTime,                          "payout time not after stop time");
         require(payoutTime      <  block.timestamp + _marketTimeOffset, "payout time too far in future");
         require(bytes(name).length <= 32                              , "market name too long");
         require(bytes(name).length > 1                                , "market name too short");
 
-        // verify valid oracle
-        (int256 _value, uint256 _timestamp) = oracleCall(oracleId);
+        int256 oracleValue;
+        uint256 oracleTime;
 
-        require(_timestamp > 0, "oracle never been updated");
-        require(_value % 1 >= 0, "invalid value requirement"); // add value logic here
+        try Oracle.getInt(oracleId) returns (int256 _oV, uint256 _oT) {
+            oracleValue = _oV;
+            oracleTime = _oT;
+        } catch {
+            revert("oracleId does not return number");
+        }
+
+        require(oracleTime > 0, "oracle never been updated");
 
         Market storage newMarket = _marketData[++_markets];
 
@@ -201,15 +195,9 @@ contract OverUnderExoticMarket is Ownable, ERC1155Supply
         newMarket.payoutTime = payoutTime;
         newMarket.refundTime = uint40(payoutTime + _refundTimeOffset);
         newMarket.drainTime  = uint40(payoutTime + _refundTimeOffset + _drainTimeOffset);
-        //newMarket.closeTime;
         newMarket.status     = Status.BETON;
-        //newMarket.result;
-        //newMarket.oracleTime;
         newMarket.creator    = msg.sender;
         newMarket.value      = value;
-        //newMarket.oracleValue;
-        //newMarket.poolTotal;
-        //newMarket.poolClaim;
         newMarket.name       = name;
 
         emit MarketCreated(
@@ -220,21 +208,25 @@ contract OverUnderExoticMarket is Ownable, ERC1155Supply
             stopTime,
             payoutTime,
             payoutTime + _refundTimeOffset,
-            payoutTime + _refundTimeOffset + _drainTimeOffset);
+            payoutTime + _refundTimeOffset + _drainTimeOffset
+        );
 
     }
 
-    // add drain all function?
-    // problem is if a user accidently sends to contract theres no way to drain without knowing if its associated with a market
-    // would have to fully trust owner OR lose funds forever...
-    // possible solution: only allow drain all if no active markets
-    // owner could pause the creation of all new markets and/or wait for all markets to end, then drain
+    /**
+    * @dev
+    *
+    * problem is if a user accidently sends to contract theres no way to drain without knowing if its associated with a market
+    * would have to fully trust owner OR lose funds forever...
+    * possible solution: only allow drain all if no active markets (keep a count)
+    * owner could pause the creation of all new markets and/or wait for all markets to end, then drain
+    *
+    */
 
     function marketDrain(uint256 marketId) external {
         require(_marketData[marketId].closeTime != 0             , "market not closed");
         require(block.timestamp > _marketData[marketId].drainTime, "market cannot be drained yet");
 
-        //drain pool
         if(_marketData[marketId].poolClaim > 0){
             payable(_marketData[marketId].creator).transfer(_marketData[marketId].poolClaim);
             _marketData[marketId].poolClaim = 0;
@@ -244,57 +236,71 @@ contract OverUnderExoticMarket is Ownable, ERC1155Supply
 
     }
 
-    // user
+    /**
+    * @dev
+    *
+    * coded for only over or under value
+    * mints tokens 1:1 with wei amount
+    * tokenId is just market plus the bet over/under enum value
+    * tracks under pool amount so user can get the total over/under bet amounts
+    *
+    * for multi-value markets in future just use
+    * keccak256(abi.encode(marketId, bet)) for tokenId
+    *
+    */
+
     function marketBet(uint256 marketId, uint8 bet) payable public {
-        // verify valid market and bet
-        // require(_marketData[marketId].startTime > 0                    , "market does not exist");
+
         require(block.timestamp < _marketData[marketId].stopTime       , "market not accepting bets");
         require(msg.value > 0                                          , "no wager was sent");
         require(bet == uint8(Result.UNDER) || bet == uint8(Result.OVER), "bet is not valid");
 
-        // mint market tokens
         _mint(msg.sender, marketId * 10 + bet, msg.value, "");
 
-        // track balance of bets
-        if(bet == uint8(Result.UNDER)){
-            _marketData[marketId].poolUnder += msg.value;
+        if(bet == uint8(Result.OVER)){
+            _marketData[marketId].poolOver += msg.value;
 
         }
 
-        // update market pool
         _marketData[marketId].poolTotal += msg.value;
 
         emit UserAction(marketId, msg.sender, Action.BET, msg.value, Result(bet));
 
     }
 
+    /**
+    * @dev
+    *
+    * verifies market can be closed then gets oracle value
+    * if within payout time verifies a proper oracle value then determines if over/under else voids market
+    * when done, detemines if user has any winning tokens then runs claim function
+    * if voided market, user has to claim after
+    *
+    * a tie goes to over
+    *
+    */
+
     function marketClose(uint256 marketId) public{
-        // need to know if market was already updated with oracle value
-        // can check status or for closeTime != 0
-        // require(_marketData[marketId].status == Status.BETON, "market is not active");
+
         require(_marketData[marketId].closeTime == 0              , "market already closed");
         require(_marketData[marketId].payoutTime > 0              , "invalid market" );
         require(block.timestamp > _marketData[marketId].payoutTime, "market cannot be closed yet");
 
-        // close to payout status
         if(block.timestamp <= _marketData[marketId].refundTime){
-            // since only 1 oracle with 2 possible results this does not need to be complicated
-            (int256 oracleValue, uint256 oracleTimestamp) = oracleCall(_marketData[marketId].oracleId);
+            (int256 oracleValue, uint256 oracleTime) = Oracle.getInt(_marketData[marketId].oracleId);
 
-            require(oracleTimestamp > _marketData[marketId].payoutTime, "market oracle(s) not updated yet");
+            require(oracleTime > _marketData[marketId].payoutTime, "market oracle(s) not updated yet");
 
             if(oracleValue < _marketData[marketId].value){
                 _marketData[marketId].result = Result.UNDER;
             }else{
-                // ties goes to over
                 _marketData[marketId].result = Result.OVER;
             }
 
             _marketData[marketId].oracleValue = oracleValue;
-            _marketData[marketId].oracleTime = uint40(oracleTimestamp);
+            _marketData[marketId].oracleTime = uint40(oracleTime);
             _marketData[marketId].status = Status.PAYOUT;
 
-        // close to refund/void status
         } else {
             _marketData[marketId].status = Status.VOID;
 
@@ -303,42 +309,41 @@ contract OverUnderExoticMarket is Ownable, ERC1155Supply
         _marketData[marketId].closeTime = uint40(block.timestamp);
         _marketData[marketId].poolClaim = _marketData[marketId].poolTotal;
 
-        // avoid 2nd tx for user that closes market
-
-        if(balanceOf(msg.sender, marketId * 10 + uint256(_marketData[marketId].result)) > 0){
+        if(balanceOf(msg.sender, marketId * 10 + uint8(_marketData[marketId].result)) > 0){
             marketClaim(marketId);
         }
 
     }
 
-    // searches for winning tokens, burns them, returns winnings
-    // losing tokens can just be manually burned
-    // rethink this design
+    /**
+    * @dev
+    *
+    * searches for winning tokens, burns them, returns payout
+    * losing tokens can just be manually burned
+    * tokens to payout will always be 1:1 in this version, future could use a DEX-like system per market
+    *
+    * need to test the porportion calculation since there are decimals
+    * can round up and last claim will always get less
+    *
+    * dont have to check for winning supply > 0 since user wont have any winning tokens anyways
+    *
+    * might make sense to have separate refund function
+    *
+    */
+
     function marketClaim(uint256 marketId) public {
 
-        // tokens to payout will always be 1:1 in v1, v2 should use a DEX-like system per market
         if(_marketData[marketId].status == Status.PAYOUT){
-            // winners split entire pool
 
             uint256 tokenId = marketId * 10 + uint256(_marketData[marketId].result);
-
             uint256 balance = balanceOf(msg.sender, tokenId);
 
             require(balance > 0, "no winning tokens");
 
-            // need to know total amount of winning tokens left and what percent user controls
-            // figure out best way to calculate with rounding
-            // dust goes to creator or owner
-            // or can get remainder and round up then eventually last claim gets less
             uint256 payout = (balance * _marketData[marketId].poolClaim / totalSupply(tokenId) * 10 + 5) / 10;
 
-            // not sure if this check is needed *TEST THIS*
-            // prevent underflow
-            // using percentages may cause a rounding error
-            // a check like this would be beneficial as it can set END status on last claim... but worth the gas each tx?
             if (payout > _marketData[marketId].poolClaim){
                 payout = _marketData[marketId].poolClaim;
-                // _marketData[marketId].status == Status.END;
 
             }
 
@@ -351,14 +356,11 @@ contract OverUnderExoticMarket is Ownable, ERC1155Supply
             emit UserAction(marketId, msg.sender, Action.CLAIM, payout, _marketData[marketId].result);
 
         } else if(_marketData[marketId].status == Status.VOID) {
-            // users get full refund (always 1:1)
-            // can move refund to its own function if it gets complicated
 
-            // probably better to have seperate claims for each token/contract
             uint256 underBalance = balanceOf(msg.sender, marketId * 10 + uint256(Result.UNDER));
             uint256 overBalance  = balanceOf(msg.sender, marketId * 10 + uint256(Result.OVER));
 
-            require(underBalance + overBalance > 0, "no market tokens"); // give user feedback
+            require(underBalance + overBalance > 0, "no market tokens");
 
             uint256 refund;
 

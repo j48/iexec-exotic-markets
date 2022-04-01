@@ -4,10 +4,10 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 
-/**
-* used to simulate Oracle Factory contract for testing on goerli
-*
-*/
+    /* @dev
+    * used to simulate Oracle Factory contract for testing on goerli
+    *
+    */
 
 
 contract OracleFactorySim is Ownable {

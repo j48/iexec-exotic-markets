@@ -1,4 +1,4 @@
-const oracleABI = [
+export const oracleABI = [
 	{
 		"inputs": [],
 		"stateMutability": "nonpayable",

@@ -26,7 +26,7 @@
 						<div>
 							<h3 class="header-h3">Powered By</h3>
 						</div>
-						<a class="iexec-link" href="https://iex.ec" target="_blank">
+						<a class="iexec-stroke" href="https://iex.ec" target="_blank">
 						<img src="./static/img/misc/iexec-white.png" class="iexec-logo">
 						</a>
 					</div>
@@ -36,161 +36,223 @@
 
 		<main>
 			<div class="main-wrapper">
-                <h2 id="market-title-h2"></h2>
+				<div class="input-container">
+					<input class="button market-active" type="button" value="Markets" onclick="location.href='./markets.html'" />
+				</div>
 
-				<div id="orderContainer" class="hide">
-					<div class="order-wrapper">
+				<h2 id="market-title-h2"></h2>
+
+				<div id="marketContainer" class="hide">
+					<div class="market-wrapper">
+
+						<div class="market-container">
+							<h1 id ="marketName" class="iexec-stroke" ></h1>
+							<h1 id ="marketValue" class="iexec-stroke" ></h1>
+							<h1 id ="marketTime" class="iexec-stroke" ></h1>
+						</div>
+
+						<div class="market-container">
+							<h3 class="iexec-stroke" >Status</h3>
+							<input type="text" id="marketStatus" class="market-output text-output" maxlength="66" placeholder="0xd3987060257095bfade672042b3b406b1862dc010ce70bd9b37e3bab59020dab" readonly>
+						</div>
+
+						<div class="market-container">
+							<h3 class="iexec-stroke" >Result</h3>
+							<input type="text" id="marketResult" class="market-output text-output" maxlength="66" placeholder="0xd3987060257095bfade672042b3b406b1862dc010ce70bd9b37e3bab59020dab" readonly>
+						</div>
+
+						<div class="market-container">
+							<h3 class="iexec-stroke" >Creator Address</h3>
+							<input type="text" id="marketCreator" class="market-output hex-output" maxlength="64" placeholder="0x" readonly>
+				</div>
+
+					</div>
+				</div>
+
+				<div id="closeContainer" class="display-none">
+					<h2>market is ready to be closed</h2>
+					<h3>verify that the updated oracle value is after the market decision time</h3>
+					<div class="market-wrapper">
+						<div class="market-container">
+								<input id="closeButton" class="button task-block" type="button" value="Close Market" disabled onclick=""/>
+						</div>
+					</div>
+
+				</div>
+
+				<div id="tokenContainer" class="hide">
+					<div class="market-wrapper">
+						<h2>Market Prediction</h2>
 
 						<div id="web3Connect" class="connect-button connection-inactive">
 							<span>Connect Web3 Wallet</span>
 						</div>
 
+
+						<div class="market-container">
+							<h3 class="iexec-stroke" >Total Pool Amount (nRLC)</h3>
+							<input type="text" id="marketPool" class="market-output text-output" maxlength="64" placeholder="0" readonly>
+						</div>
+
+						<div class="market-flex-row">
+						<div class="market-container">
+							<h3 class="iexec-stroke" >Total Amount for Over</h3>
+							<input type="text" id="marketBetOver" class="market-output text-output" maxlength="64" placeholder="0" readonly>
+						</div>
+
+						<div class="market-container">
+							<h3 class="iexec-stroke" >Total Amount for Under</h3>
+							<input type="text" id="marketBetUnder" class="market-output text-output" maxlength="64" placeholder="0" readonly>
+						</div>
+							</div>
+
+						<div class="market-container">
+							<h5><a class="iexec-link" href="https://faucet.iex.ec/viviani" target="_blank">get Testnet nRLC</a> </h5>
+							<h3 class="iexec-stroke" >Your Prediction (nRLC)</h3>
+							<input type="text" id="betAmount" class="market-input text-input" maxlength="64" >
+						</div>
+
+						<div class="market-flex-row">
+							<div class="market-container">
+								<input id="betOverButton" class="button task-block" type="button" value="Over" disabled onclick=""/>
+							</div>
+							<div class="market-container">
+								<input id="betUnderButton" class="button task-block" type="button" value="Under" disabled onclick=""/>
+							</div>
+						</div>
+
+						<div class="market-flex-row">
+							<div class="market-container">
+								<h3 class="iexec-stroke" >Your Over Tokens</h3>
+								<input type="text" id="overTokens" class="market-output text-output" maxlength="64" placeholder="0" readonly>
+							</div>
+
+							<div class="market-container">
+							<h3 class="iexec-stroke" >Your Under Tokens</h3>
+							<input type="text" id="underTokens" class="market-output text-output" maxlength="64" placeholder="0" readonly>
+							</div>
+
+
+						</div>
+
+						<div class="market-flex-row">
+							<div class="market-container">
+								<input id="overButton" class="button task-block " type="button" value="View" disabled onclick=""/>
+							</div>
+							<div class="market-container">
+								<input id="underButton" class="button task-block" type="button" value="View" disabled onclick=""/>
+							</div>
+
+						</div>
+
 						<div id="web3Status"></div>
 
-						<div class="input-container">
-							<h3 class="iexec-link" >Market Name</h3>
-							<input type="text" id="marketName" class="smart-contract-output" maxlength="30" placeholder="Covid-19 vaccines in France" readonly>
-						</div>
-						<div class="input-container">
-							<h3 class="iexec-link" >Over/Under</h3>
-							<input type="text" id="marketValue" class="smart-contract-output" maxlength="32" placeholder="155000000" readonly>
-						</div>
-
-						<div class="input-container">
-							<h3 class="iexec-link" >After</h3>
-							<input type="text" id="marketPayout" class="smart-contract-output" maxlength="64" placeholder="0" readonly>
-						</div>
-
-						<div class="input-container">
-							<h3 class="iexec-link" >Your Bet (nRLC, in wei for now)</h3>
-							<input type="text" id="betAmount" class="smart-contract-input" maxlength="64" >
-						</div>
-						<div class="input-container">
-								<input id="betUnderButton" class="button task-block" type="button" value="Bet Under" disabled onclick=""/>
-						</div>
-						<div class="input-container">
-								<input id="betOverButton" class="button task-block" type="button" value="Bet Over" disabled onclick=""/>
-						</div>
 
 					</div>
 				</div>
-				<div id="tokensContainer" class="hide">
-					<div class="order-wrapper">
-						<div class="input-container">
-							<h3 class="iexec-link" >Your Under Tokens</h3>
-							<input type="text" id="underTokens" class="smart-contract-output" maxlength="64" placeholder="0" readonly>
-						</div>
-						<div class="input-container">
-								<input id="underButton" class="button task-block" type="button" value="View Under Tokens" disabled onclick=""/>
-						</div>
 
-						<div class="input-container">
-							<h3 class="iexec-link" >Your Over Tokens</h3>
-							<input type="text" id="overTokens" class="smart-contract-output" maxlength="64" placeholder="0" readonly>
+				<div id="claimContainer" class="display-none">
+					<div class="market-wrapper">
+						<h2>winners can now claim market earnings</h2>
+						<div class="market-container">
+							<h3 class="iexec-stroke" >Pool Amount Left to Claim</h3>
+							<input type="text" id="marketClaim" class="market-output text-output" maxlength="64" placeholder="0" readonly>
 						</div>
-						<div class="input-container">
-								<input id="overButton" class="button task-block" type="button" value="View Over Tokens" disabled onclick=""/>
-						</div>
-
-						<div class="input-container">
-							<h3 class="iexec-link" >Result</h3>
-							<input type="text" id="marketResult" class="smart-contract-output" maxlength="66" placeholder="0xd3987060257095bfade672042b3b406b1862dc010ce70bd9b37e3bab59020dab" readonly>
-						</div>
-
-						<div class="input-container">
-							<h3 class="iexec-link" >Status</h3>
-							<input type="text" id="marketStatus" class="smart-contract-output" maxlength="66" placeholder="0xd3987060257095bfade672042b3b406b1862dc010ce70bd9b37e3bab59020dab" readonly>
-						</div>
-
-						<div class="input-container">
+						<div class="market-container">
 								<input id="claimButton" class="button task-block" type="button" value="Claim Payout" disabled onclick=""/>
 						</div>
 
-						<div class="input-container">
-								<input id="closeButton" class="button task-block" type="button" value="Close Market" disabled onclick=""/>
-						</div>
+					</div>
+				</div>
 
-						<div class="input-container">
-							<h3 class="iexec-link" >Pool Amount Left to Claim</h3>
-							<input type="text" id="marketClaim" class="smart-contract-output" maxlength="64" placeholder="0" readonly>
+				<div id="refundContainer" class="display-none">
+					<div class="market-wrapper">
+						<h2>market refunds can now be claimed</h2>
+						<div class="market-container">
+							<h3 class="iexec-stroke" >Total Amount of Refunds Left</h3>
+							<input type="text" id="marketRefundPool" class="market-output text-output" maxlength="64" placeholder="0" readonly>
 						</div>
-
-						<div class="input-container">
-							<h3 class="iexec-link" >Total Pool Amount</h3>
-							<input type="text" id="marketPool" class="smart-contract-output" maxlength="64" placeholder="0" readonly>
-						</div>
-
-						<div class="input-container">
-							<h3 class="iexec-link" >Total Bets for Over</h3>
-							<input type="text" id="marketBetOver" class="smart-contract-output" maxlength="64" placeholder="0" readonly>
-						</div>
-
-						<div class="input-container">
-							<h3 class="iexec-link" >Total Bets for Under</h3>
-							<input type="text" id="marketBetUnder" class="smart-contract-output" maxlength="64" placeholder="0" readonly>
-						</div>
-
-						<div class="input-container">
-							<h3 class="iexec-link" >Start Time</h3>
-							<input type="text" id="marketStart" class="smart-contract-output" maxlength="64" placeholder="0" readonly>
-						</div>
-						<div class="input-container">
-							<h3 class="iexec-link" >Betting Stops</h3>
-							<input type="text" id="marketStop" class="smart-contract-output" maxlength="64" placeholder="0" readonly>
-						</div>
-						<div class="input-container">
-							<h3 class="iexec-link" >Refund Deadline</h3>
-							<input type="text" id="marketRefund" class="smart-contract-output" maxlength="64" placeholder="0" readonly>
-						</div>
-						<div class="input-container">
-							<h3 class="iexec-link" >Creator Drain Time</h3>
-							<input type="text" id="marketDrain" class="smart-contract-output" maxlength="64" placeholder="0" readonly>
-						</div>
-						<div class="input-container">
-							<h3 class="iexec-link" >Time Closed</h3>
-							<input type="text" id="marketClose" class="smart-contract-output" maxlength="64" placeholder="0" readonly>
-						</div>
-
-						<div class="input-container">
-							<h3 class="iexec-link" >Creator Address</h3>
-							<input type="text" id="marketCreator" class="smart-contract-output" maxlength="64" placeholder="0x" readonly>
+						<div class="market-container">
+								<input id="refundButton" class="button task-block" type="button" value="Claim Refund" disabled onclick=""/>
 						</div>
 
 					</div>
 				</div>
 
+				<div id="timeContainer" class="hide">
+					<div class="market-wrapper">
+						<h2>Market Times</h2>
+						<div class="market-flex-row">
+						<div class= "market-left">
+						<div class="market-container">
+							<h3 class="iexec-stroke" >Start Time</h3>
+							<input type="text" id="marketStart" class="market-output text-output" maxlength="64" placeholder="0" readonly>
+						</div>
+						<div class="market-container">
+							<h3 class="iexec-stroke" >Predictions Stop</h3>
+							<input type="text" id="marketStop" class="market-output text-output" maxlength="64" placeholder="0" readonly>
+						</div>
+						<div class="market-container">
+							<h3 class="iexec-stroke" >Decision Time</h3>
+							<input type="text" id="marketPayout2" class="market-output text-output" maxlength="64" placeholder="0" readonly>
+						</div>
+
+						</div>
+						<div class = "market-right">
+						<div class="market-container">
+							<h3 class="iexec-stroke" >Creator Drain Time</h3>
+							<input type="text" id="marketDrain" class="market-output text-output" maxlength="64" placeholder="0" readonly>
+						</div>
+							<div class="market-container">
+								<h3 class="iexec-stroke" >Refund Deadline</h3>
+								<input type="text" id="marketRefund" class="market-output text-output" maxlength="64" placeholder="0" readonly>
+							</div>
+							<div class="market-container">
+								<h3 class="iexec-stroke" >Time Closed</h3>
+								<input type="text" id="marketClose" class="market-output text-output" maxlength="64" placeholder="0" readonly>
+							</div>
+
+						</div>
+						</div>
+					</div>
+
+					</div>
+
+
 				<div id="oracleContainer" class="hide">
-					<h2>Oracle Data for Market</h2>
+					<h2>Market Oracle Data</h2>
 					<h3>oracle value must be updated after the market decision time</h3>
-					<div class="order-wrapper">
-						<div class="input-container">
-							<h3 class="iexec-link" >Oracle ID</h3>
-							<input type="text" id="marketOracleId" class="smart-contract-output hex-input" maxlength="64" placeholder="0x" readonly>
-						</div>
-						<div class="input-container">
-								<input id="viewOracleButton" class="button task-block hide" type="button" value="view Oracle" disabled onclick=""/>
-						</div>
-						<div class="input-container">
-							<h3 class="iexec-link" >Oracle URI</h3>
-							<input type="text" id="marketOracleUri" class="smart-contract-output hex-input" maxlength="32" placeholder="0" readonly>
+					<h3>after oracle has been updated via Oracle Factory page,</h3>
+					<h3>market must be closed to set market result using the oracle value</h3>
+					<div class="market-wrapper">
+						<div class="market-container">
+							<div class="market-container">
+								<input id="viewOracleButton" class="button task-block hide" type="button" value="View" disabled onclick=""/>
+							</div>
+
+							<h3 class="iexec-stroke" >Oracle ID</h3>
+							<input type="text" id="marketOracleId" class="market-output hex-output" maxlength="64" placeholder="0x" readonly>
 						</div>
 
-						<div class="input-container">
-							<h3 class="iexec-link" >Oracle Value used for Market Result</h3>
-							<input type="text" id="marketOracleValue" class="smart-contract-output" maxlength="64" placeholder="0" readonly>
-						</div>
-						<div class="input-container">
-							<h3 class="iexec-link" >Oracle Value Update Time</h3>
-							<input type="text" id="marketOracleTime" class="smart-contract-output" maxlength="64" placeholder="0" readonly>
+						<div class="market-container">
+							<h3 class="iexec-stroke" >Oracle URI</h3>
+							<input type="text" id="marketOracleUri" class="market-output hex-output" maxlength="32" placeholder="0" readonly>
 						</div>
 
-						<div class="input-container">
+						<div class="market-container">
+							<h3 class="iexec-stroke" >Oracle Value used for Market Result</h3>
+							<input type="text" id="marketOracleValue" class="market-output text-output" maxlength="64" placeholder="0" readonly>
+						</div>
+						<div class="market-container">
+							<h3 class="iexec-stroke" >Oracle Value Update Time</h3>
+							<input type="text" id="marketOracleTime" class="market-output text-output" maxlength="64" placeholder="0" readonly>
+						</div>
+						<div class="market-container">
 								<input id="updateOracleButton" class="button task-block hide" type="button" value="Update Oracle" disabled onclick=""/>
 						</div>
 
 					</div>
 				</div>
-
 
 			</div>
 		</main>
@@ -208,9 +270,7 @@
 
 				<div class="footer-center">
 					<div>
-						<a class="iexec-link" href="./markets.html">
-						<h2>/home</h2>
-						</a>
+
 					</div>
 				</div>
 

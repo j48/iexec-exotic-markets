@@ -36,55 +36,76 @@
 
 		<main>
 			<div class="main-wrapper">
-                <h2 id="h2">Create New Market</h2>
+                <div class="input-container">
+					<input class="button market-active" type="button" value="Markets" onclick="location.href='./markets.html'" />
+				</div>
 
-				<div id="orderContainer">
-					<div class="order-wrapper">
+				<h2 id="h2">Create New Market</h2>
+
+				<div id="marketContainer">
+					<div class="market-wrapper">
+
+						<div class="oracles-container">
+							<h3 class="iexec-link" >Select Oracle or Enter Your Own</h3>
+							<div id="marketOracles" class="oracles-content"></div>
+						</div>
+
+						<div class="market-container">
+							<h3 class="iexec-link" >Oracle ID</h3>
+							<input type="text" id="marketOracleId" class="market-input hex-input" maxlength="66" placeholder="0xc61dd0e53eab8e7b02301608bc34752903826eaed6aac0bcda916f7bf2d20f86">
+						</div>
+
+						<div class="market-container">
+							<h3 class="iexec-link" >Oracle URI</h3>
+							<input type="text" id="marketOracleUid" class="market-input hex-input" maxlength="32" placeholder="621baf087bd20d685e74872e">
+						</div>
+
+						<div class="market-container">
+								<input id="viewOracleButton" class="button task-block" type="button" value="View" disabled onclick=""/>
+						</div>
+
+						<div class="market-container">
+							<h3 class="iexec-link" >Market Name</h3>
+							<input type="text" id="marketName" class="market-input text-input" maxlength="30" placeholder="Support Ukraine ETH count">
+						</div>
+						<div class="market-container">
+							<h3 class="iexec-link" >Over/Under</h3>
+							<input type="text" id="marketValue" class="market-input text-input" maxlength="32" placeholder="2500">
+						</div>
+						<div class="market-container">
+							<h3 class="iexec-link" >After</h3>
+							<input type="datetime-local" id="marketPayout" class="market-input text-input" name="market-payout" value="2022-01-01T19:30" min="2022-01-01T00:00" max="2029-12-31T00:00">
+						</div>
+						<div class="market-container">
+							<h3 class="iexec-link" >Predictions Deadline</h3>
+							<input type="datetime-local" id="marketStop" class="market-input text-input" name="market-betting-stop" value="2022-01-01T19:30" min="2022-01-01T00:00" max="2029-12-31T00:00">
+						</div>
+						<div class="market-container">
+							<h3 class="iexec-link" >Current Time</h3>
+							<input type="datetime-local" id="marketCurrent" class="market-output text-output" name="market-current" value="2022-01-01T19:30" min="2022-01-01T00:00" max="2029-12-31T00:00" disabled>
+						</div>
+
+						<div class="market-container">
 						<div id="web3Connect" class="connect-button connection-inactive">
 							<span>Connect Web3 Wallet</span>
 						</div>
+
+							<input id="runTaskButton" class="button task-block" type="button" value="Create Market" disabled onclick=""/>
+						</div>
+
 						<div id="web3Status"></div>
-
-						<div class="input-container">
-							<h3 class="iexec-link" >Market Name</h3>
-							<input type="text" id="marketName" class="smart-contract-input" maxlength="30" placeholder="Support Ukraine ETH count">
-						</div>
-						<div class="input-container">
-							<h3 class="iexec-link" >Over/Under</h3>
-							<input type="text" id="marketValue" class="smart-contract-input" maxlength="32" placeholder="2500">
-						</div>
-						<div class="input-container">
-							<h3 class="iexec-link" >After</h3>
-							<input type="datetime-local" id="marketPayout" class="smart-contract-input" name="market-payout" value="2022-01-01T19:30" min="2022-01-01T00:00" max="2029-12-31T00:00">
-						</div>
-						<div class="input-container">
-							<h3 class="iexec-link" >Betting Deadline (must be earlier than the time from above ^)</h3>
-							<input type="datetime-local" id="marketStop" class="smart-contract-input" name="market-betting-stop" value="2022-01-01T19:30" min="2022-01-01T00:00" max="2029-12-31T00:00">
-						</div>
-						<div class="input-container">
-							<h3 class="iexec-link" >Oracle ID</h3>
-							<input type="text" id="marketOracleId" class="smart-contract-input hex-input" maxlength="66" placeholder="0xc61dd0e53eab8e7b02301608bc34752903826eaed6aac0bcda916f7bf2d20f86">
-						</div>
-						<div class="input-container">
-							<h3 class="iexec-link" >Oracle URI</h3>
-							<input type="text" id="marketOracleUid" class="smart-contract-input hex-input" maxlength="32" placeholder="621baf087bd20d685e74872e">
-						</div>
-
-						<div class="input-container">
-								<input id="runTaskButton" class="button task-block" type="button" value="Create Market" disabled onclick=""/>
-						</div>
 
 					</div>
 				</div>
 
-				<div class="input-container">
+				<div class="market-container">
 					<h2>Instructions</h2>
 					<h3>this Dapp uses the <a class="iexec-link" href="https://oracle-factory.iex.ec/gallery" target="_blank">iExec Oracle Factory for oracle data</a> </h3>
 					<h3>oracle values need to be updated manually</h3>
 					<h3>create a new oracle or use a previously created oracle</h3>
 					<h3>oracle must return a number and have been updated at least once</h3>
 					<h3>market name should be as minimal and understandable as possible (limited to 32 bytes)</h3>
-					<h3>betting deadline must be equal to or before the market determination time</h3>
+					<h3>prediction deadline must be equal to or before the market determination time</h3>
 					<h3>ties count as Over</h3>
 					<h3>markets currently have a 30 day deadline window set</h3>
 					<h3>times are based on UTC and sent to the smart contract as a UNIX timestamp</h3>
@@ -108,9 +129,7 @@
 
 				<div class="footer-center">
 					<div>
-						<a class="iexec-link" href="./markets.html">
-						<h2>/home</h2>
-						</a>
+
 					</div>
 				</div>
 

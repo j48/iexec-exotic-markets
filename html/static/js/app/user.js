@@ -1,7 +1,8 @@
-import { resultEnum, actionEnum } from "./data.js";
-import { eventData } from "./app.js";
+import { eventData } from "./web3/helpers.js";
+import { exoticContract } from "./data/chain.js";
+import { resultEnum, actionEnum, valueDecimals } from "./data/markets.js";
 
-function showEntryDetails(){
+function showEntryDetails() {
     const parentContainer = this.parentNode;
 
     // hide/show details
@@ -11,18 +12,18 @@ function showEntryDetails(){
 
     //logo
     const expandOption = this.querySelector('.entry-expand-span');
-    if(expandOption.dataset.show == "true"){
+    if (expandOption.dataset.show == "true") {
         expandOption.dataset.show = "false";
         expandOption.innerHTML = "Details ▼";
 
-    }else{
+    } else {
         expandOption.dataset.show = "true";
         expandOption.innerHTML = "   Hide ▲";
     }
 
 }
 
-function addUserEvents(data, elementId="dataContainer", action="new"){
+function addUserEvents(data, elementId = "dataContainer", action = "new") {
     const table = document.getElementById(elementId);
 
     const currentEntryCount = table.querySelectorAll('.entry-container').length;
@@ -38,21 +39,21 @@ function addUserEvents(data, elementId="dataContainer", action="new"){
         newEntry.id = `entry-id-${entryId}`;
         newEntry.classList.add("entry-container");
 
-        if(entryId % 2 == 0){
+        if (entryId % 2 == 0) {
             newEntry.classList.add("entry-even");
-        }else{
+        } else {
             newEntry.classList.add("entry-odd");
         }
 
-        if(entryId == 1){
+        if (entryId == 1) {
             //only id 1 has entry-start
             newEntry.classList.add("entry-start");
-        }else{
+        } else {
             // remove previous entry as end
             // this will allow for transition
             const previousEntry = document.getElementById(`entry-id-${entryId-1}`);
             previousEntry.classList.remove("entry-end");
-            if(entryId != 2){
+            if (entryId != 2) {
                 previousEntry.classList.add("entry-middle");
             }
         }
@@ -128,7 +129,7 @@ function addUserEvents(data, elementId="dataContainer", action="new"){
                 </div>
            </div>
             `;
-        
+
         subData.innerHTML = dataHTML;
         newEntry.appendChild(subData);
         newEntry.classList.add("entry-end");
@@ -137,19 +138,19 @@ function addUserEvents(data, elementId="dataContainer", action="new"){
 
         ++newEntryCount;
 
-        });
+    });
 
 }
 
-export async function populateUserData(eventData){
+export async function populateUserData(eventData) {
     const dataContainer = document.getElementById("dataContainer");
 
-    if(eventData.error){
+    if (eventData.error) {
         dataContainer.innerHTML = eventData.error;
-    }else if(eventData != null && eventData.length != 0){
+    } else if (eventData != null && eventData.length != 0) {
         dataContainer.innerHTML = "";
         await addUserEvents(eventData, "dataContainer", "new");
-    }else{
+    } else {
         dataContainer.innerHTML = "no events found for user";
     }
 
@@ -163,29 +164,31 @@ export async function populateUserData(eventData){
 }
 
 async function populateUserData(addr) {
-        const filter = {user: addr };
+    const filter = {
+        user: addr
+    };
 
-        return eventData("UserAction", filter)
-            .then( (results) => {
-                return results;
-            });
-    }
+    return eventData("UserAction", filter)
+        .then((results) => {
+            return results;
+        });
+}
 
-async function searchUser(){
-        // demo get user address
-        const userAddress = "0xDdb291a72e9005bFB2c2F44Aca6bA5047318fd2D";
-        const userData = await populateUserData(userAddress);
-        const dataContainer = document.getElementById("dataContainer");
+async function searchUser() {
+    // demo get user address
+    const userAddress = "0xDdb291a72e9005bFB2c2F44Aca6bA5047318fd2D";
+    const userData = await populateUserData(userAddress);
+    const dataContainer = document.getElementById("dataContainer");
 
-        // build table with data
-        await populateUserData(userData.reverse());
+    // build table with data
+    await populateUserData(userData.reverse());
 
-        // disable
-        // userSearchButton.disabled = true;
+    // disable
+    // userSearchButton.disabled = true;
 
-    }
+}
 
-export function load(){
+export function load() {
 
     const userSearchButton = document.getElementById('userSearchButton');
 
